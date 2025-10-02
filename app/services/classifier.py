@@ -33,7 +33,9 @@ def rule_based(text: str) -> Dict:
     return {'category': cat, 'confidence': round(conf, 3), 'strategy': 'rules'}
 
 def openai_available() -> bool:
-    return bool(os.getenv('OPENAI_API_KEY'))
+    key = os.getenv('OPENAI_API_KEY')
+    print(">>> DEBUG: OPENAI_API_KEY lido:", key[:8] + "..." if key else "NÃO ENCONTRADO")
+    return bool(key)
 
 def openai_classify_and_respond(text: str) -> Dict:
     from openai import OpenAI
@@ -59,12 +61,13 @@ def openai_classify_and_respond(text: str) -> Dict:
             temperature=0.2,
         )
         content = resp.choices[0].message.content.strip()
+        print(">>> DEBUG: Resposta bruta da OpenAI:", content)
 
         # Tenta parsear direto
         try:
             data = json.loads(content)
         except json.JSONDecodeError:
-            # Se vier com texto extra, extrai o primeiro JSON válido
+            print(">>> DEBUG: JSON inválido, tentando extrair com regex...")
             match = re.search(r"\{.*\}", content, re.S)
             if match:
                 data = json.loads(match.group())
@@ -82,6 +85,7 @@ def openai_classify_and_respond(text: str) -> Dict:
         }
 
     except Exception as e:
+        print(">>> ERRO OpenAI:", str(e))
         # fallback para regra
         out = rule_based(text)
         return {
@@ -93,4 +97,5 @@ def openai_classify_and_respond(text: str) -> Dict:
 def classify_email(text: str) -> Dict:
     if openai_available():
         return openai_classify_and_respond(text)
+    print(">>> DEBUG: OpenAI indisponível, usando regras.")
     return rule_based(text)
