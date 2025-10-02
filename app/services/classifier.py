@@ -1,4 +1,6 @@
 import os
+import re
+import json
 from typing import Dict
 from .nlp import tokenize, normalize
 
@@ -36,13 +38,17 @@ def openai_available() -> bool:
 def openai_classify_and_respond(text: str) -> Dict:
     from openai import OpenAI
     client = OpenAI()
+
     sys_prompt = (
         "Você é um assistente de triagem de emails corporativos. "
-        "Classifique cada email como 'Produtivo' (requer ação) ou 'Improdutivo' (sem ação), "
-        "e gere UMA resposta sugerida breve e objetiva em pt-BR. "
-        "Formato de saída JSON com chaves: category, response."
+        "Classifique cada email como 'Produtivo' ou 'Improdutivo'. "
+        "Responda **somente** em JSON válido, neste formato exato:\n"
+        "{\"category\": \"Produtivo ou Improdutivo\", \"response\": \"resposta em pt-BR\"}\n"
+        "Não escreva nada além do JSON."
     )
-    user_prompt = f"Email:\n\n{text}\n\nResponda no formato JSON pedido."
+
+    user_prompt = f"Email:\n\n{text}\n\nResponda APENAS no formato JSON válido pedido."
+
     try:
         resp = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -53,15 +59,36 @@ def openai_classify_and_respond(text: str) -> Dict:
             temperature=0.2,
         )
         content = resp.choices[0].message.content.strip()
-        import json
-        data = json.loads(content)
-        cat = data.get('category','Produtivo').strip()
-        sug = data.get('response','').strip()
-        return {'category': cat, 'confidence': 0.9, 'strategy': 'openai', 'response': sug}
-    except Exception:
+
+        # Tenta parsear direto
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError:
+            # Se vier com texto extra, extrai o primeiro JSON válido
+            match = re.search(r"\{.*\}", content, re.S)
+            if match:
+                data = json.loads(match.group())
+            else:
+                raise
+
+        cat = data.get('category', 'Produtivo').strip()
+        sug = data.get('response', '').strip()
+
+        return {
+            'category': cat,
+            'confidence': 0.95,
+            'strategy': 'openai',
+            'response': sug
+        }
+
+    except Exception as e:
         # fallback para regra
         out = rule_based(text)
-        return {**out, 'strategy': out.get('strategy','rules') + '+fallback'}
+        return {
+            **out,
+            'strategy': out.get('strategy', 'rules') + '+fallback',
+            'error': str(e)
+        }
 
 def classify_email(text: str) -> Dict:
     if openai_available():
