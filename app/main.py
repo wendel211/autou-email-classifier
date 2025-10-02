@@ -34,7 +34,7 @@ async def api_classify(file: UploadFile | None = File(default=None), text: str |
     category = result.get("category", "Produtivo")
     confidence = result.get("confidence", 0.7)
     strategy = result.get("strategy", "rules")
-   
+    # Se veio resposta da OpenAI, use; caso contrário gere localmente
     response_text = result.get("response") or suggest_response(body_text, category)
     return {
         "category": category,
