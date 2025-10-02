@@ -7,57 +7,78 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
-<body class="bg-slate-50 text-slate-900">
+<body class="bg-gradient-to-br from-slate-100 to-slate-50 text-slate-900 min-h-screen">
   <div class="max-w-3xl mx-auto p-6">
-    <header class="mb-6">
-      <h1 class="text-3xl font-bold">AutoU – Classificador de Emails</h1>
-      <p class="text-slate-600">Envie um texto, .txt ou .pdf. O sistema classifica e sugere uma resposta.</p>
+    
+    <!-- HEADER -->
+    <header class="mb-8 text-center">
+      <h1 class="text-4xl font-extrabold bg-gradient-to-r from-indigo-600 to-indigo-500 bg-clip-text text-transparent">
+        AutoU – Classificador de Emails
+      </h1>
+      <p class="mt-2 text-slate-600 text-base">
+        Envie um texto, .txt ou .pdf. O sistema classifica e sugere uma resposta.
+      </p>
     </header>
 
-    <section class="bg-white shadow rounded-2xl p-6">
-      <form id="emailForm" class="space-y-4">
+    <!-- FORM -->
+    <section class="bg-white shadow-lg rounded-2xl p-6 border border-slate-100">
+      <form id="emailForm" class="space-y-6">
+        <!-- Textarea -->
         <div>
-          <label class="block text-sm font-medium mb-1">Colar texto do email</label>
-          <textarea name="text" rows="6" class="w-full border rounded-xl p-3 focus:outline-none focus:ring" placeholder="Cole aqui o conteúdo do email..."></textarea>
+          <label class="block text-sm font-medium mb-2 text-slate-700">Colar texto do email</label>
+          <textarea 
+            name="text" rows="6" 
+            class="w-full border border-slate-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+            placeholder="Cole aqui o conteúdo do email..."></textarea>
         </div>
 
-        <div class="flex items-center gap-3">
-          <div>
-            <label class="block text-sm font-medium mb-1">Ou enviar arquivo (.txt/.pdf)</label>
-            <input type="file" name="file" accept=".txt,.pdf" class="block w-full text-sm" />
+        <!-- File + Button -->
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <div class="w-full sm:w-auto">
+            <label class="block text-sm font-medium mb-2 text-slate-700">Ou enviar arquivo (.txt/.pdf)</label>
+            <input 
+              type="file" 
+              name="file" 
+              accept=".txt,.pdf" 
+              class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 
+                     file:rounded-lg file:border-0 file:text-sm file:font-semibold 
+                     file:bg-indigo-50 file:text-indigo-600 
+                     hover:file:bg-indigo-100 transition"/>
           </div>
-          <div class="grow"></div>
-          <button class="btn-primary" type="submit">Classificar</button>
+          <div class="flex-grow"></div>
+          <button class="btn-primary w-full sm:w-auto" type="submit">📂 Classificar</button>
         </div>
       </form>
     </section>
 
-    <section id="results" class="mt-6 hidden">
-      <div class="bg-white shadow rounded-2xl p-6">
-        <h2 class="text-xl font-semibold mb-3">Resultado</h2>
-        <div class="grid gap-4">
+    <!-- RESULTS -->
+    <section id="results" class="mt-8 hidden">
+      <div class="bg-white shadow-lg rounded-2xl p-6 border border-slate-100">
+        <h2 class="text-xl font-semibold mb-4 text-slate-800">Resultado</h2>
+        <div class="grid gap-5">
           <div>
-            <p class="text-sm text-slate-500">Categoria</p>
-            <p id="category" class="text-lg font-semibold"></p>
+            <p class="text-xs uppercase font-semibold text-slate-500">Categoria</p>
+            <p id="category" class="text-lg font-bold text-indigo-600"></p>
           </div>
           <div>
-            <p class="text-sm text-slate-500">Confiança</p>
-            <p id="confidence" class="font-medium"></p>
+            <p class="text-xs uppercase font-semibold text-slate-500">Confiança</p>
+            <p id="confidence" class="font-medium text-slate-800"></p>
           </div>
           <div>
-            <p class="text-sm text-slate-500">Estratégia</p>
-            <p id="strategy" class="font-mono text-sm"></p>
+            <p class="text-xs uppercase font-semibold text-slate-500">Estratégia</p>
+            <p id="strategy" class="font-mono text-sm text-slate-700 bg-slate-50 rounded-lg p-2"></p>
           </div>
           <div>
-            <p class="text-sm text-slate-500">Resposta sugerida</p>
-            <pre id="suggested" class="bg-slate-50 p-3 rounded-xl whitespace-pre-wrap"></pre>
+            <p class="text-xs uppercase font-semibold text-slate-500">Resposta sugerida</p>
+            <pre id="suggested" class="bg-slate-50 p-4 rounded-xl whitespace-pre-wrap border border-slate-200 text-slate-800"></pre>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="mt-8 text-center text-sm text-slate-500">
-      Feito com FastAPI • Baseline regra‑baseada + OpenAI opcional
+    <!-- FOOTER -->
+    <footer class="mt-10 text-center text-sm text-slate-500">
+      Feito com <span class="text-indigo-600 font-medium">FastAPI</span> • Baseline regra-baseada + OpenAI opcional
     </footer>
   </div>
 
