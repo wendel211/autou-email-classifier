@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AutoU – Classificador de Emails</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div class="max-w-3xl mx-auto p-6">
+    <header class="mb-6">
+      <h1 class="text-3xl font-bold">AutoU – Classificador de Emails</h1>
+      <p class="text-slate-600">Envie um texto, .txt ou .pdf. O sistema classifica e sugere uma resposta.</p>
+    </header>
+
+    <section class="bg-white shadow rounded-2xl p-6">
+      <form id="emailForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1">Colar texto do email</label>
+          <textarea name="text" rows="6" class="w-full border rounded-xl p-3 focus:outline-none focus:ring" placeholder="Cole aqui o conteúdo do email..."></textarea>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div>
+            <label class="block text-sm font-medium mb-1">Ou enviar arquivo (.txt/.pdf)</label>
+            <input type="file" name="file" accept=".txt,.pdf" class="block w-full text-sm" />
+          </div>
+          <div class="grow"></div>
+          <button class="btn-primary" type="submit">Classificar</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="results" class="mt-6 hidden">
+      <div class="bg-white shadow rounded-2xl p-6">
+        <h2 class="text-xl font-semibold mb-3">Resultado</h2>
+        <div class="grid gap-4">
+          <div>
+            <p class="text-sm text-slate-500">Categoria</p>
+            <p id="category" class="text-lg font-semibold"></p>
+          </div>
+          <div>
+            <p class="text-sm text-slate-500">Confiança</p>
+            <p id="confidence" class="font-medium"></p>
+          </div>
+          <div>
+            <p class="text-sm text-slate-500">Estratégia</p>
+            <p id="strategy" class="font-mono text-sm"></p>
+          </div>
+          <div>
+            <p class="text-sm text-slate-500">Resposta sugerida</p>
+            <pre id="suggested" class="bg-slate-50 p-3 rounded-xl whitespace-pre-wrap"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-8 text-center text-sm text-slate-500">
+      Feito com FastAPI • Baseline regra‑baseada + OpenAI opcional
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
