@@ -119,14 +119,6 @@ Saída esperada:
 2 passed in 0.04s
 ```
 
-## Vídeo de Demonstração
-
-O vídeo (3–5 min) deve mostrar:
-
-1. **Introdução (30s):** apresentação pessoal + desafio.
-2. **Demonstração (3min):** upload de email, classificação e resposta sugerida.
-3. **Explicação técnica (1min):** NLP + integração OpenAI + fallback.
-4. **Conclusão (30s):** aprendizados e próximos passos.
 
 ## Possíveis Melhorias
 
